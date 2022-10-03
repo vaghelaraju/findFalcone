@@ -15,6 +15,7 @@ interface Props {
 interface States {
   planets: IPlanets[];
   vehicles: IVehicles[];
+  selectedVehicles: IVehicles[];
   timeDuration: number;
   planetOne: IPlanets | undefined;
   planetTwo: IPlanets | undefined;
@@ -24,6 +25,7 @@ interface States {
   vehicleTwo: IVehicles | undefined;
   vehicleThree: IVehicles | undefined;
   vehicleFour: IVehicles | undefined;
+  isLoading: boolean;
 }
 class PlanetScreen extends PureComponent<Props, States> {
   static contextType?: React.Context<IContextType> | undefined = AppContext;
@@ -33,6 +35,7 @@ class PlanetScreen extends PureComponent<Props, States> {
     this.state = {
       planets: [],
       vehicles: [],
+      selectedVehicles: [],
       timeDuration: 0,
       planetOne: undefined,
       planetTwo: undefined,
@@ -42,6 +45,7 @@ class PlanetScreen extends PureComponent<Props, States> {
       vehicleTwo: undefined,
       vehicleThree: undefined,
       vehicleFour: undefined,
+      isLoading: false,
     };
     props.navigation.setOptions({
       headerRight: () => (
@@ -109,28 +113,40 @@ class PlanetScreen extends PureComponent<Props, States> {
       this.setState({planets: copiedData});
     }
   };
-  doUpdateVehicle = (index: number) => {
-    const {vehicles} = this.state;
+  doUpdateVehicle = (option: IVehicles) => {
+    const {vehicles, selectedVehicles} = this.state;
     if (
       vehicles.filter(value => {
         return value.isSelected;
       }).length <= 4
     ) {
+      const copiedVehicles = [...selectedVehicles];
       const copiedData = [...vehicles].map((value: IVehicles, idx: number) => {
         let newItem: IVehicles = Object.assign({}, value);
-        if (idx === index) {
-          newItem.isSelected = !newItem.isSelected;
+        if (value.name === option.name && !option.isSelected) {
+          newItem.isSelected = true;
+          newItem.total_no = newItem.total_no - 1;
+          copiedVehicles.push(newItem);
+        } else if (value.name === option.name && option.isSelected) {
+          newItem.total_no = newItem.total_no - 1;
+          copiedVehicles.push(newItem);
         }
         return newItem;
       });
 
-      this.setState({vehicles: copiedData});
+      this.setState(
+        {vehicles: copiedData, selectedVehicles: copiedVehicles},
+        () => {
+          this.doCalculateTime();
+        },
+      );
     }
   };
   doFindFalcone = async () => {
+    this.setState({isLoading: true});
     let token = await getToken();
     console.log('token', token);
-    const {planets, vehicles} = this.state;
+    const {planets, selectedVehicles} = this.state;
     if (token) {
       let data = {
         token: token.token,
@@ -139,7 +155,7 @@ class PlanetScreen extends PureComponent<Props, States> {
           .map(value => {
             return value.name;
           }),
-        vehicle_names: vehicles
+        vehicle_names: selectedVehicles
           .filter(value => value.isSelected)
           .map(value => {
             return value.name;
@@ -148,19 +164,46 @@ class PlanetScreen extends PureComponent<Props, States> {
       console.log('data', data);
       let result = await doFineFalCone(data);
       console.log('result', result);
+      if (result) {
+        const {status, planet_name} = result;
+        this.props.navigation.navigate('Success', {
+          timeDuration: this.state.timeDuration,
+          planetFound: planet_name ? planet_name : '',
+          status: status,
+        });
+      }
+      this.setState({isLoading: false});
     }
   };
+  doCalculateTime = () => {
+    let distance1 = this.state.planetOne?.distance;
+    let distance2 = this.state.planetTwo?.distance;
+    let distance3 = this.state.planetThree?.distance;
+    let distance4 = this.state.planetFour?.distance;
+    let speed1 = this.state.vehicleOne?.speed;
+    let speed2 = this.state.vehicleTwo?.speed;
+    let speed3 = this.state.vehicleThree?.speed;
+    let speed4 = this.state.vehicleFour?.speed;
+    let timeDuration = 0;
+    if (this.state.vehicleOne) {
+      timeDuration = timeDuration + calculateTime(distance1, speed1);
+    }
+    if (this.state.vehicleTwo) {
+      timeDuration = timeDuration + calculateTime(distance2, speed2);
+    }
+    if (this.state.vehicleThree) {
+      timeDuration = timeDuration + calculateTime(distance3, speed3);
+    }
+    if (this.state.vehicleFour) {
+      timeDuration = timeDuration + calculateTime(distance4, speed4);
+    }
+    console.log('timeDuration', timeDuration);
+    this.setState({timeDuration: timeDuration});
+  };
   doReset = () => {
-    const copiedData = [...this.state.planets].map(
-      (value: IPlanets, idx: number) => {
-        let newItem: IPlanets = Object.assign({}, value);
-        newItem.isSelected = false;
-        return newItem;
-      },
-    );
-
     this.setState({
-      planets: copiedData,
+      planets: this.context.state.planets,
+      vehicles: this.context.state.vehicles,
       planetOne: undefined,
       planetTwo: undefined,
       planetThree: undefined,
@@ -169,6 +212,7 @@ class PlanetScreen extends PureComponent<Props, States> {
       vehicleTwo: undefined,
       vehicleThree: undefined,
       vehicleFour: undefined,
+      selectedVehicles: [],
     });
   };
   render() {
@@ -215,25 +259,33 @@ class PlanetScreen extends PureComponent<Props, States> {
               }}
               renderRowText={(a: IPlanets) => {
                 return a.name;
-              }}>
+              }}
+              disabled={this.state.planetOne != undefined}>
               <CustomText
                 label={planetOne ? planetOne.name : 'Select Planet'}
               />
             </ModalDropdown>
             <ModalDropdown
-              options={this.state.vehicles}
+              options={this.state.vehicles.filter(value => {
+                return (
+                  this.state.planetOne?.distance <= value.max_distance &&
+                  value.total_no > 0
+                );
+              })}
               multipleSelect={false}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetOne) {
                   this.setState({vehicleOne: option});
+                  this.doUpdateVehicle(option);
                 } else {
                   Alert.alert('Error', 'Please select Planet');
                 }
               }}
               renderRowText={(a: IVehicles) => {
                 return `${a.name}(${a.total_no})`;
-              }}>
+              }}
+              disabled={this.state.vehicleOne != undefined}>
               <CustomText
                 label={vehicleOne ? vehicleOne.name : 'Select Vehicle'}
               />
@@ -253,25 +305,33 @@ class PlanetScreen extends PureComponent<Props, States> {
               }}
               renderRowText={(a: IPlanets) => {
                 return a.name;
-              }}>
+              }}
+              disabled={this.state.planetTwo != undefined}>
               <CustomText
                 label={planetTwo ? planetTwo.name : 'Select Planet'}
               />
             </ModalDropdown>
             <ModalDropdown
-              options={this.state.vehicles}
+              options={this.state.vehicles.filter(value => {
+                return (
+                  this.state.planetTwo?.distance <= value.max_distance &&
+                  value.total_no > 0
+                );
+              })}
               multipleSelect={false}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetTwo) {
                   this.setState({vehicleTwo: option});
+                  this.doUpdateVehicle(option);
                 } else {
                   Alert.alert('Error', 'Please select Planet');
                 }
               }}
               renderRowText={(a: IVehicles) => {
                 return `${a.name}(${a.total_no})`;
-              }}>
+              }}
+              disabled={this.state.vehicleTwo != undefined}>
               <CustomText
                 label={vehicleTwo ? vehicleTwo.name : 'Select Vehicle'}
               />
@@ -297,25 +357,33 @@ class PlanetScreen extends PureComponent<Props, States> {
               }}
               renderRowText={(a: IPlanets) => {
                 return a.name;
-              }}>
+              }}
+              disabled={this.state.planetThree != undefined}>
               <CustomText
                 label={planetThree ? planetThree.name : 'Select Planet'}
               />
             </ModalDropdown>
             <ModalDropdown
-              options={this.state.vehicles}
+              options={this.state.vehicles.filter(value => {
+                return (
+                  this.state.planetThree?.distance <= value.max_distance &&
+                  value.total_no > 0
+                );
+              })}
               multipleSelect={false}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetThree) {
                   this.setState({vehicleThree: option});
+                  this.doUpdateVehicle(option);
                 } else {
                   Alert.alert('Error', 'Please select Planet');
                 }
               }}
               renderRowText={(a: IVehicles) => {
                 return `${a.name}(${a.total_no})`;
-              }}>
+              }}
+              disabled={this.state.vehicleThree != undefined}>
               <CustomText
                 label={vehicleThree ? vehicleThree.name : 'Select Vehicle'}
               />
@@ -334,25 +402,33 @@ class PlanetScreen extends PureComponent<Props, States> {
               }}
               renderRowText={(a: IPlanets) => {
                 return a.name;
-              }}>
+              }}
+              disabled={this.state.planetFour != undefined}>
               <CustomText
                 label={planetFour ? planetFour.name : 'Select Planet'}
               />
             </ModalDropdown>
             <ModalDropdown
-              options={this.state.vehicles}
+              options={this.state.vehicles.filter(value => {
+                return (
+                  this.state.planetFour?.distance <= value.max_distance &&
+                  value.total_no > 0
+                );
+              })}
               multipleSelect={false}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetFour) {
                   this.setState({vehicleFour: option});
+                  this.doUpdateVehicle(option);
                 } else {
                   Alert.alert('Error', 'Please select Planet');
                 }
               }}
               renderRowText={(a: IVehicles) => {
                 return `${a.name}(${a.total_no})`;
-              }}>
+              }}
+              disabled={this.state.vehicleFour != undefined}>
               <CustomText
                 label={vehicleFour ? vehicleFour.name : 'Select Vehicle'}
               />
@@ -362,12 +438,13 @@ class PlanetScreen extends PureComponent<Props, States> {
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => this.doFindFalcone()}>
-          <CustomButton label="Finding Falcone" />
+          <CustomButton label="Finding Falcone" isLoading={this.state.isLoading}/>
         </TouchableOpacity>
         <SafeAreaView style={{backgroundColor: colors.gray}}>
           <CustomButton
             label="Coding problem finding-falcone"
             containerStyle={customStyles.containerFooter}
+            
           />
         </SafeAreaView>
       </View>
