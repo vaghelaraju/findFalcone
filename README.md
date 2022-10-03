@@ -18,8 +18,8 @@ years….
 
     ### iOS
       
-    1. Run `pod install` from `Shopify-RN/ios` folder
-    2. Start XCode and open generated `ShopifyRN.xcworkspace`
+    1. Run `pod install` from `findFalcone/ios` folder
+    2. Start XCode and open generated `FindFalcone.xcworkspace`
      
     ### Android
     
