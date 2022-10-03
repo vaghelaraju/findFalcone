@@ -47,9 +47,8 @@ years….
 - It shows API call result that are returned to us with customized messages.
 
 ## Screenshots:
-![1664807928411](https://user-images.githubusercontent.com/99483003/193605330-192ca99a-0736-44db-bec2-42038e18c86c.jpg) !
-![1664807928399 (1)](https://user-images.githubusercontent.com/99483003/193605395-60cc0427-c4c0-40b9-83d0-b1374c41aa09.jpg) !
-![1664807928406](https://user-images.githubusercontent.com/99483003/193605429-368084c0-a814-4822-8517-6759266341aa.jpg)
+
+![1664807928406](https://user-images.githubusercontent.com/99483003/193606003-d1694cf7-bc0e-4d0d-907a-df43e3f6d330.jpg)
 
 
 
