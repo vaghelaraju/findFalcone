@@ -4,11 +4,9 @@ import reducer, { initialState } from "../reducers";
 import { IPlanets, IVehicles } from "../stores";
 
 export const setPlanets = (dispatch: any, planets: IPlanets[]) => {
-
     dispatch({ type: SET_PLANETS, value: planets })
 }
 
-export const setVehicles = (vehicles: IVehicles[]) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
+export const setVehicles = (dispatch: any, vehicles: IVehicles[]) => {
     dispatch({ type: SET_VEHICLES, value: vehicles })
 }
