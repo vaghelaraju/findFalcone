@@ -10,6 +10,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 5,
         marginVertical: 5
+    },
+    containerButton: {
+        backgroundColor: '#044CDE',
+        borderRadius: 5,
+        marginHorizontal: 10,
+        marginVertical: 5
     }
 });
 export default styles;

@@ -1,5 +1,5 @@
 
-import { Button, Text, View } from 'react-native'
+import { Button, Text, View, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import styles from '../resources/styles'
 import { getPlanets, getVehicles } from '../services'
@@ -7,6 +7,7 @@ import { setPlanets, setVehicles } from '../actions'
 import { AppContext, IPlanets, IVehicles } from '../stores'
 import ModalDropdown from 'react-native-modal-dropdown';
 import CustomText from '../components/CustomText'
+import CustomButton from '../components/CustomButton'
 const PlanetScreen = () => {
     const [planetNames, setPlanetNames] = useState([])
     const [planetOne, setPlanetOne] = useState("")
@@ -19,6 +20,7 @@ const PlanetScreen = () => {
     const [vehicleThree, setVehicleThree] = useState("")
     const [vehicleFour, setVehicleFour] = useState("")
     const { state, dispatch } = useContext(AppContext)
+
     const getPlanetName = async () => {
         const json = await getPlanets()
         if (json && Array.isArray(json)) {
@@ -43,8 +45,12 @@ const PlanetScreen = () => {
             setVehicles(dispatch, json)
             setVehicleNames([...json].map((value: IVehicles) => { return `${value.name}(${value.total_no})` }))
         }
+    }
+    const vehicleSele = () => {
+        const vehicleOne: IVehicles = state.vehicles.find((value: IVehicles) => value.name == vehicleOne);
 
     }
+    const doFindFalcone = () => { }
     useEffect(() => {
         getPlanetName()
         getVehicleName()
@@ -96,6 +102,7 @@ const PlanetScreen = () => {
                         <CustomText label={vehicleFour.length > 0 ? vehicleFour : "Select Vehicle"} /></ModalDropdown>
                 </View>
             </View>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => doFindFalcone()}><CustomButton label='Finding Falcone' /></TouchableOpacity>
         </View >
     )
 }
