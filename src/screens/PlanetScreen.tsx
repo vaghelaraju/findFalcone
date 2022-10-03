@@ -258,6 +258,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 this.doUpdatePlanets(option);
                 this.setState({planetOne: option});
               }}
+              dropdownTextProps={{testID: '1'}}
               renderRowText={(a: IPlanets) => {
                 return a.name;
               }}
@@ -273,6 +274,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                   value.total_no > 0
                 );
               })}
+              dropdownTextProps={{testID: '2'}}
               multipleSelect={false}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
@@ -299,6 +301,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 return !value.isSelected || value.name === planetTwo?.name;
               })}
               multipleSelect={false}
+              dropdownTextProps={{testID: '3'}}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 this.setState({planetTwo: option});
@@ -320,6 +323,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 );
               })}
               multipleSelect={false}
+              dropdownTextProps={{testID: '4'}}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetTwo) {
@@ -351,6 +355,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 return !value.isSelected || value.name === planetThree?.name;
               })}
               multipleSelect={false}
+              dropdownTextProps={{testID: '5'}}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 this.setState({planetThree: option});
@@ -372,6 +377,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 );
               })}
               multipleSelect={false}
+              dropdownTextProps={{testID: '6'}}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetThree) {
@@ -396,6 +402,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 return !value.isSelected || value.name === planetFour?.name;
               })}
               multipleSelect={false}
+              dropdownTextProps={{testID: '7'}}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 this.setState({planetFour: option});
@@ -417,6 +424,7 @@ class PlanetScreen extends PureComponent<Props, States> {
                 );
               })}
               multipleSelect={false}
+              dropdownTextProps={{testID: '8'}}
               textStyle={customStyles.containerModalText}
               onSelect={(index, option) => {
                 if (planetFour) {
