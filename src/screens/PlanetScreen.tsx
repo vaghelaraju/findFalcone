@@ -213,6 +213,7 @@ class PlanetScreen extends PureComponent<Props, States> {
       vehicleThree: undefined,
       vehicleFour: undefined,
       selectedVehicles: [],
+      timeDuration: 0,
     });
   };
   render() {
@@ -438,13 +439,15 @@ class PlanetScreen extends PureComponent<Props, States> {
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => this.doFindFalcone()}>
-          <CustomButton label="Finding Falcone" isLoading={this.state.isLoading}/>
+          <CustomButton
+            label="Finding Falcone"
+            isLoading={this.state.isLoading}
+          />
         </TouchableOpacity>
         <SafeAreaView style={{backgroundColor: colors.gray}}>
           <CustomButton
             label="Coding problem finding-falcone"
             containerStyle={customStyles.containerFooter}
-            
           />
         </SafeAreaView>
       </View>
