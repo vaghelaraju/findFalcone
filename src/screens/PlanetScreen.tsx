@@ -46,7 +46,11 @@ const PlanetScreen = () => {
             setVehicleNames([...json].map((value: IVehicles) => { return `${value.name}(${value.total_no})` }))
         }
     }
-    const vehicleSele = () => {
+    const planetSelection = () => {
+        const vehicleOne: IVehicles = state.vehicles.find((value: IVehicles) => value.name == vehicleOne);
+
+    }
+    const vehicleSelection = () => {
         const vehicleOne: IVehicles = state.vehicles.find((value: IVehicles) => value.name == vehicleOne);
 
     }
