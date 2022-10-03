@@ -30,18 +30,14 @@ years….
 
 
 ## Key Features:
-### Select Planet Screen
-- List of Planet with Name and Distance.
+### Select Planet and Vehicle Screen
+- List of Planet with Name .
 - In the first screen you can select any planet to send a vehicle.
 - You have to select exactly 4 planets to search for the Queen AI falcone.
 - Time taken is calculated based on planet distance and vehicle speed.
 - FIND FALCONE! button validates your input and if it is valid and performs API call.
 - On click of Reset, all data selection of planets and vehicles will be reset
 
-### Select Vehicle Screen
-- List of Vehicles with Name, Distance cover,  speed and number of count available of respective Vehicle.
-- Calculation of available vehicles based on occupied Vehicles.
-- If 0 vehicle available it will show ab alert on selection.
 
 ### Status screen
 - It shows API call result that are returned to us with customized messages.
