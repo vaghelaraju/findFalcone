@@ -10,30 +10,24 @@ Queen Al Falcone is now in hiding. But if King Shan can find
 her before the years are up, she will be exiled for another 15
 years….
 
-## Installation:
+ ## Build and run the app
 
-#Environment :
-- Android studio version : android studio chipmunk 2021.2.1 patch 1 [Download Android Studio](https://developer.android.com/studio)
-- OS: macOS Monterey version 12.4
-- Gradle version :7.3.3
-- Gradle path :https\://services.gradle.org/distributions/gradle-7.3.3-bin.zip
-- compileSdk 32
-- targetSdk 32
+1. Install React Native as described at [https://facebook.github.io/react-native/docs/getting-started.html#content](https://facebook.github.io/react-native/docs/getting-started.html#content)
+2. Clone this repository
+3. Run `yarn install` , all required components will be installed automatically
 
-- How to install it
-- Step to  run android project
-- Step 1
-- Extract FEproblem1.zip file at any location.
-- Step 2
-- Select FEproblem1 folder which contains the android root folder. which have folder like app, gradle and file like build.gradle, gradle.properties, gradlew, gradlew.bat and settings.gradle
-- Step 3
-- Wait till gradle build finishes.
+    ### iOS
+      
+    1. Run `pod install` from `Shopify-RN/ios` folder
+    2. Start XCode and open generated `ShopifyRN.xcworkspace`
+     
+    ### Android
+    
+    no steps required
+        
+4. It is recommended to run `react-native start` command from root project directory.
+5. Run your project from XCode (`Cmd+R`) for iOS, or use `react-native run-android` to run your project on Android.
 
-## Github path
-[Download](https://github.com/vaghelaraju/FindingFalcone)
-
-## APK path
-[Download apk](https://github.com/vaghelaraju/FindingFalcone/blob/main/Feproblem.apk)
 
 ## Key Features:
 ### Select Planet Screen
